@@ -1,0 +1,17 @@
+<h1>Create a game!</h1>
+
+{% if error_message %}<p><strong>{{ error_message}}</strong></p>{% endif %}
+
+<form action="{% url 'game:add' %}" method="POST">
+{% csrf_token %}
+
+<label for="game_name">Name</label>
+<input type="text" id="name" name="name" required minlength="4" maxlength="80" size="20">
+<br>
+
+<label for="sea_map">Sea Map</label>
+<textarea name="sea_map" rows="10" cols="30">--\nx-</textarea>
+<br>
+
+<input type="submit" value="Create">
+</form>
