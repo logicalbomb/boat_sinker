@@ -1,2 +1,2 @@
 # boat_sinker
-Fun project to learn django and sink some boats!
+Fun project to learn FastAPI, HTMX and sink some boats!
