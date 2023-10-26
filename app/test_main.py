@@ -6,19 +6,16 @@ from .database import Base
 from .main import app, get_db
 
 
-SQLALCHEMY_TEST_DB_URL = "sqlite:///./app.test.db"
-
-test_engine = create_engine(SQLALCHEMY_TEST_DB_URL, connect_args={"check_same_thread": False})
-TestingSessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=test_engine)
-
-Base.metadata.create_all(bind=test_engine)
+SQLALCHEMY_TEST_DB_URL = "sqlite://"
 
 def override_get_db():
     try:
-        db = TestingSessionLocal()
-        yield db
+        test_engine = create_engine(SQLALCHEMY_TEST_DB_URL, connect_args={"check_same_thread": False})
+        Base.metadata.create_all(bind=test_engine)
+        TestSession = sessionmaker(autocommit=False, autoflush=False, bind=test_engine)
+        yield TestSession()
     finally:
-        db.close()
+        test_engine.dispose()
 
 app.dependency_overrides[get_db] = override_get_db
 
