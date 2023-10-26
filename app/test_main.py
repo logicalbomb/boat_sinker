@@ -109,6 +109,20 @@ def test_create_game_with_bad_char_in_starting_board():
     assert response.status_code == 422
     assert response.json()['detail'][0]['type'] == 'string_pattern_mismatch'
 
+def test_create_game_with_mismatched_boards():
+    response = client.post(
+        "/",
+        json={
+            "starting_board": VALID_STARTING_BOARD[:99] + "o",
+            "finished_board": VALID_FINISHED_BOARD,
+            "row_nums": VALID_ROW_NUMS,
+            "col_nums": VALID_COL_NUMS
+        }
+    )
+    print("Response is:\n{}".format(response.json()))
+    assert response.status_code == 422
+    assert response.json()['detail'][0]['msg'] == 'Value error, Start cannot get to finish: o -/> ~ @ 99'
+
 def test_create_game_with_a_small_finished_board():
     response = client.post(
         "/",
