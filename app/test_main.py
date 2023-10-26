@@ -123,3 +123,56 @@ def test_create_game_with_a_large_finished_board():
     #print("Response is:\n{}".format(response.json()))
     assert response.status_code == 422
     assert response.json()['detail'][0]['type'] == 'string_too_long'
+
+def test_create_game_with_small_row_nums():
+    response = client.post(
+        "/",
+        json={
+            "starting_board": VALID_STARTING_BOARD,
+            "finished_board": VALID_FINISHED_BOARD,
+            "row_nums": "0",
+            "col_nums": VALID_COL_NUMS
+        }
+    )
+    assert response.status_code == 422
+    assert response.json()['detail'][0]['type'] == 'string_too_short'
+
+def test_create_game_with_large_row_nums():
+    response = client.post(
+        "/",
+        json={
+            "starting_board": VALID_STARTING_BOARD,
+            "finished_board": VALID_FINISHED_BOARD,
+            "row_nums": VALID_ROW_NUMS + "0",
+            "col_nums": VALID_COL_NUMS
+        }
+    )
+    assert response.status_code == 422
+    assert response.json()['detail'][0]['type'] == 'string_too_long'
+
+def test_create_game_with_small_col_nums():
+    response = client.post(
+        "/",
+        json={
+            "starting_board": VALID_STARTING_BOARD,
+            "finished_board": VALID_FINISHED_BOARD,
+            "row_nums": VALID_ROW_NUMS,
+            "col_nums": "8"
+        }
+    )
+    assert response.status_code == 422
+    assert response.json()['detail'][0]['type'] == 'string_too_short'
+
+def test_create_game_with_large_col_nums():
+    response = client.post(
+        "/",
+        json={
+            "starting_board": VALID_STARTING_BOARD,
+            "finished_board": VALID_FINISHED_BOARD,
+            "row_nums": VALID_ROW_NUMS,
+            "col_nums": VALID_COL_NUMS + "8"
+        }
+    )
+    assert response.status_code == 422
+    assert response.json()['detail'][0]['type'] == 'string_too_long'
+
