@@ -16,7 +16,7 @@ def get_random_game(db: Session):
     return get_game(db=db, game_id=randint(min_id, max_id))
 
 def create_game(db: Session, game: schemas.GameCreate):
-    db_game = models.Game(**game.dict())
+    db_game = models.Game(**game.model_dump())
     db.add(db_game)
     db.commit()
     db.refresh(db_game)
