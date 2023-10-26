@@ -119,7 +119,7 @@ def test_create_game_with_mismatched_boards():
             "col_nums": VALID_COL_NUMS
         }
     )
-    print("Response is:\n{}".format(response.json()))
+    #print("Response is:\n{}".format(response.json()))
     assert response.status_code == 422
     assert response.json()['detail'][0]['msg'] == 'Value error, Start cannot get to finish: o -/> ~ @ 99'
 
@@ -203,6 +203,20 @@ def test_create_game_with_bad_char_in_row_nums():
     assert response.status_code == 422
     assert response.json()['detail'][0]['type'] == 'string_pattern_mismatch'
 
+def test_create_game_with_too_low_val_in_row_nums():
+    response = client.post(
+        "/",
+        json={
+            "starting_board": VALID_STARTING_BOARD,
+            "finished_board": VALID_FINISHED_BOARD,
+            "row_nums": VALID_ROW_NUMS[:9] + "0",
+            "col_nums": VALID_COL_NUMS
+        }
+    )
+    print("Response is:\n{}".format(response.json()))
+    assert response.status_code == 422
+    assert response.json()['detail'][0]['msg'] == 'Value error, Row numbers don\'t add up to 20, instead 19'
+
 def test_create_game_with_small_col_nums():
     response = client.post(
         "/",
@@ -241,4 +255,18 @@ def test_create_game_with_bad_char_in_col_nums():
     )
     assert response.status_code == 422
     assert response.json()['detail'][0]['type'] == 'string_pattern_mismatch'
+
+def test_create_game_with_too_high_val_in_col_nums():
+    response = client.post(
+        "/",
+        json={
+            "starting_board": VALID_STARTING_BOARD,
+            "finished_board": VALID_FINISHED_BOARD,
+            "row_nums": VALID_ROW_NUMS,
+            "col_nums": "8" + VALID_COL_NUMS[:9]
+        }
+    )
+    print("Response is:\n{}".format(response.json()))
+    assert response.status_code == 422
+    assert response.json()['detail'][0]['msg'] == 'Value error, Column numbers don\'t add up to 20, instead 26'
 

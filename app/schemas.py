@@ -50,6 +50,25 @@ class GameBase(BaseModel):
         frozen=True
     )]
 
+    @model_validator(mode='after')
+    def check_plausible_num_vals(self) -> 'GameBase':
+        sum = 0
+        for c in self.row_nums:
+            sum += int(c)
+
+        if sum != 20:
+            raise ValueError("Row numbers don't add up to 20, instead {}".format(sum))
+
+        sum = 0
+        for c in self.col_nums:
+            sum += int(c)
+
+        if sum != 20:
+            raise ValueError("Column numbers don't add up to 20, instead {}".format(sum))
+
+        return self
+
+
 class GameCreate(GameBase):
     ##
     # A game board that has all of the properties as the starting_board, with one major
