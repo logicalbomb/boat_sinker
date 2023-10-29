@@ -1,0 +1,22 @@
+<h3>Boat Sinker</h3>
+<table>
+    <tbody>
+    {% for row in range(0, 10) %}
+        <tr>
+        {% for col in range(0, 11) %}
+            {% if col == 10 %}
+                <td>{{ game.row_nums[row] }}</td>
+            {% else %}
+                <td>{{ game.starting_board[(row * 10) + col] }}</td>
+            {% endif %}
+        {% endfor %}
+        </tr>
+    {% endfor %}
+        <tr>
+            {% for col in range(0, 10) %}
+                <td>{{ game.col_nums[col] }}</td>
+            {% endfor %}
+            <td>x</td>
+        </tr>
+    </tbody>
+</table>
